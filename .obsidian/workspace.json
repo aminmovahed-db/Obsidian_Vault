@@ -11,10 +11,14 @@
             "id": "4af5a5e7e64a3309",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "01-Projects/Alinta/Alinta Clarifying Questions - Allison Notes Review.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Alinta Clarifying Questions - Allison Notes Review"
             }
           }
         ]
@@ -100,6 +104,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "01-Projects/Alinta/Alinta Clarifying Questions - Allison Notes Review.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -109,7 +114,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for Alinta Clarifying Questions - Allison Notes Review"
             }
           },
           {
@@ -118,11 +123,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "01-Projects/Alinta/Alinta Clarifying Questions - Allison Notes Review.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from Alinta Clarifying Questions - Allison Notes Review"
             }
           },
           {
@@ -183,9 +189,11 @@
             "type": "leaf",
             "state": {
               "type": "file-properties",
-              "state": {},
+              "state": {
+                "file": "01-Projects/Alinta/Alinta Clarifying Questions - Allison Notes Review.md"
+              },
               "icon": "lucide-info",
-              "title": "File properties"
+              "title": "File properties for Alinta Clarifying Questions - Allison Notes Review"
             }
           }
         ],
@@ -209,11 +217,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4af5a5e7e64a3309",
+  "active": "37d0879a4e299a92",
   "lastOpenFiles": [
-    "01-Projects/Alinta/Alinta Overview.md",
     "01-Projects/Alinta/Alinta Detailed Design - Catalog and Security.md",
     "01-Projects/Alinta/Alinta Clarifying Questions - Allison Notes Review.md",
+    "01-Projects/Alinta/Alinta Overview.md",
     "00-Inbox/2026-03-19.md",
     "04-Archive/Daily/2026-03-19.md",
     "04-Archive/Daily/2026-03-18.md",
