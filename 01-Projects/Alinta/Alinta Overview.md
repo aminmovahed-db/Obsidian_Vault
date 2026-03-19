@@ -72,6 +72,8 @@ No extra budget — proceeding with PS as far as budget allows. Partner expected
 - [Final Solution Design](https://docs.google.com/document/d/1xHKisvagYV7-4s3_tnhAwhiHCPhIBGoVr5cthrnb9mU/edit?tab=t.0)
 - [Allison Historical Notes 1](https://docs.google.com/document/d/1gGS1Q41fcjDvoMQe6yz9cl3ak5kVcduM6E_0jWGtdlc/edit?usp=sharing)
 - [Allison Historical Notes 2](https://docs.google.com/document/d/1hCpTxLaQbCkH7d5p2J0ulatSxhT4DZq5Gu9bJy0xraM/edit?usp=sharing)
+
+## Project Deliverable Document:
 - [[Alinta Detailed Design - Catalog and Security]]
 
 ## Implementation Plan
