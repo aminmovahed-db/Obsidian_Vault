@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__glean__glean_read_api_call",
+      "mcp__glean__glean_get_api_info",
+      "WebFetch(domain:docs.databricks.com)",
+      "WebSearch"
+    ]
+  }
+}
