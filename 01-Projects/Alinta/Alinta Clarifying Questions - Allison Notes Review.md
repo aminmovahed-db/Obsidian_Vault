@@ -17,7 +17,10 @@ status: draft
 > - [Allison Historical Notes 1](https://docs.google.com/document/d/1gGS1Q41fcjDvoMQe6yz9cl3ak5kVcduM6E_0jWGtdlc/edit?usp=sharing)
 > - [Allison Historical Notes 2](https://docs.google.com/document/d/1hCpTxLaQbCkH7d5p2J0ulatSxhT4DZq5Gu9bJy0xraM/edit?usp=sharing)
 > - Email: Pilot for Teams - Data Science Notes (Andrew Davis, 12 Aug 2025)
-> - Email: Pilot for Teams Uplift - DnA Requirements (Andrew Davis, 14 Aug 2025) — has 3 attachments (PDF workshop board, User Requirement Summary docx, DnA Workshop Notes docx) not yet reviewed
+> - Email: Fwd: Pilot for Teams Uplift - DnA Requirements (Allison Chau, 19 Mar 2026, fwd of Andrew Davis 14 Aug 2025) — 3 attachments reviewed ✅:
+>   - `Pilot for Teams Workshop.pdf` — workshop board export (sticky notes by MoSCoW priority)
+>   - `PFT - User Requirement Summary.docx` — consolidated user requirements across 7 sessions
+>   - `PFT - DnA Workshop Notes.docx` — AI-generated meeting notes from DnA workshop
 > - Email: Pilot for Teams Uplift - Merchant Tech (Andrew Davis, 12 Aug 2025)
 > - Email: Pilot for Teams Uplift - Digital Follow-up notes (Andrew Davis, 12 Aug 2025)
 > - Email: Pilot for Teams Uplift - ML Ops Walkthrough (Andrew Davis, 4 Aug 2025)
@@ -57,11 +60,15 @@ Workshop notes also mention Retail Insights, Merchant, and Credit Risk as specif
 **From emails:**
 - *Data Science Notes email:* Dan highlighted *"the growing complexity and messiness of managing a large number of tables and models within a single schema"* and the *"lack of personal schemas."* He suggested a dual-schema approach (prototype and pilot) per team. This implies teams want some schema flexibility but within guardrails.
 
-**Status:** ⚠️ Partial — Strong recommendation toward DnA control, but DS teams feel constrained by single-schema setups. A middle ground might be: DnA provisions initial schemas via Terraform, but teams can request additional project schemas via SNOW. Need to confirm with Andrew/David.
+**From DnA Workshop Notes (.docx):**
+- *"Brad advocating for hard controls wherever possible"* and *"Beyza and Chuong noting that some aspects, like cluster creation, can be technically enforced."* — Brad strongly favours hard controls over policy.
+- *"only packages vetted and managed through an internal repository (such as Nexus) should be permitted, and that direct internet installs are prohibited"* — confirms the governance posture extends to all provisioning, not just schemas.
+
+**Status:** ⚠️ Partial — Strong recommendation toward DnA control, but DS teams feel constrained by single-schema setups. Brad's "hard controls" stance suggests DnA should provision schemas via Terraform, with teams requesting additional project schemas via SNOW. Need to confirm with Andrew/David.
 
 ---
 
-### Q3 — Dev User workspace migration
+### Q3 — Dev User workspace migration ✅
 
 **Question:** Teams currently develop in Prod User. What's the expected timeline and appetite for moving all pilot development to Dev User?
 
@@ -81,7 +88,11 @@ Workshop notes also mention Retail Insights, Merchant, and Credit Risk as specif
 
 **From Allison's notes:** Workshop notes: *"Automated reporting would be sufficient instead of automated enforcement"* and Andrew wanted time-bound access. The governance stance leans toward DnA control.
 
-**Status:** ⚠️ Partial — No explicit decision. Lean is toward DnA ownership given governance posture.
+**From DnA Workshop Notes (.docx):**
+- *"Brad preferring centralised control over access and productionisation requests, and the group agreeing that permissions should be managed at the team level"* — interesting tension: Brad wants centralised control over the *process*, but team-level *permissions*.
+- *"Andrew raised the issue of time-based access for stakeholders"* — Andrew's focus is on time-bounding, not who owns.
+
+**Status:** ⚠️ Partial — Lean is toward DnA ownership of `pilot_uat` schemas (aligns with Brad's centralised control preference), but with team-level permissions for read/write. The time-bound access pattern Andrew raised fits well: DnA provisions the schema, teams get temporary write access for promotion, business users get temporary read access for validation.
 
 ---
 
@@ -169,7 +180,11 @@ Workshop notes also mention Retail Insights, Merchant, and Credit Risk as specif
 - *Merchant Tech email:* Duminda's team explicitly needs *"a service account to run the pipelines"* and *"a service account to deploy from the pipeline."* Andrew and Erik were tasked with creating a *"service account with appropriate restrictions to enable pipeline deployment."*
 - *ML Ops Walkthrough email:* The ML framework uses CI/CD pipelines with deployment jobs — implies existing SPs for the engineering pipeline.
 
-**Status:** ⚠️ Partial — At least one team (Merchant/Energy) already needs a dedicated service account for pipeline deployment. Engineering has existing CI/CD SPs. Still need to confirm whether Alinta wants one SP per automation job (tagging, security, cleaning, monitoring) or a shared SP for all.
+**From User Requirement Summary (.docx):**
+- *"Service Accounts: Provision service accounts for automated pipeline execution within pilot environments"* — listed as a core requirement under Automation & DevOps Integration.
+- *"Automated provisioning and teardown of pilot environments"* — implies automation SPs are expected.
+
+**Status:** ⚠️ Partial — At least one team (Merchant/Energy) already needs a dedicated service account for pipeline deployment. Engineering has existing CI/CD SPs. User Requirements doc confirms SPs for automation are a core requirement. Still need to confirm whether Alinta wants one SP per automation job (tagging, security, cleaning, monitoring) or a shared SP for all.
 
 ---
 
@@ -182,7 +197,11 @@ Workshop notes also mention Retail Insights, Merchant, and Credit Risk as specif
 - *Merchant Tech email:* Duminda's team integrates with the DFM platform (external system) and their own GitHub repository. Compute runs in Databricks with output going back to DFM.
 - *Data Science Notes email:* Dan uses SKLearn, Keras, and time series libraries — likely needs PyPI access for package installation.
 
-**Status:** ⚠️ Partial — At least Digital (web scraping, Gen AI APIs), Merchant Tech (DFM integration, GitHub), and Data Science (PyPI packages) need outbound access. Still need a complete whitelist from all teams.
+**From DnA Workshop Notes (.docx):**
+- *"only packages vetted and managed through an internal repository (such as Nexus) should be permitted, and that direct internet installs are prohibited"* — Brad mandates package installs go through Nexus, not PyPI directly. This means the whitelist must include the internal Nexus endpoint.
+- *"Link and David raised concerns about uncontrolled resource usage and costs, leading to agreement that guardrails should be implemented"* — cost guardrails tied to network/compute controls.
+
+**Status:** ⚠️ Partial — At least Digital (web scraping, Gen AI APIs), Merchant Tech (DFM integration, GitHub), and Data Science (packages via Nexus, not PyPI directly) need outbound access. Internal Nexus repo must be whitelisted. Still need a complete whitelist from all teams.
 
 ---
 
@@ -222,6 +241,40 @@ Workshop notes also mention Retail Insights, Merchant, and Credit Risk as specif
 
 ---
 
+### Q7 — Catalog for DnA internal work
+
+**Question:** Does the DnA team need their own pilot catalog for internal tooling, automation development, or testing? Or do they operate exclusively in Pipeline workspaces?
+
+**From DnA Workshop Notes (.docx):**
+- *"Brad emphasised that the data engineering team is responsible for defining mandatory standards and guidelines, but not for training users"*
+- The three meta use cases identified for pilot environments (sandboxing, data science enablement, IT prototyping) are all **business team** use cases — DnA is never mentioned as a pilot user.
+- *"Brad introduced the concept of pilot managers as subject matter authorities responsible for compliance and onboarding within their teams"* — DnA governs, they don't pilot.
+
+**From User Requirement Summary (.docx):**
+- *"Clear handover process from business teams to DNA for production deployment"* — positions DnA as the receiver of production-ready assets, not the creator of pilot assets.
+- *"Service Accounts: Provision service accounts for automated pipeline execution within pilot environments"* — DnA needs SPs for automation in pilot catalogs, but not their own catalog.
+
+**Status:** ✅ Answered — DnA does not need a pilot catalog. They operate exclusively in Pipeline workspaces and govern the pilot environment via automation jobs (security, tagging, cleanup) using service principals. No evidence of DnA doing exploratory or pilot work.
+
+---
+
+### Q9 — Ownership transfer target
+
+**Question:** When the security job revokes individual `MANAGE` on user-created objects, should ownership transfer to (a) the team's Entra group, (b) a dedicated service principal, or (c) the DnA admin group?
+
+**From DnA Workshop Notes (.docx):**
+- *"permissions should be managed at the team level rather than by individual pilot managers"* — favours team group ownership over individual or central ownership.
+- *"the importance of team-based ownership of pilot objects"* — explicitly calls out team-level ownership as the model.
+- *"Brad preferring centralised control over access and productionisation requests"* — Brad wants DnA to control the *rules* and *process*, but objects are owned by teams.
+
+**From User Requirement Summary (.docx):**
+- *"Role-based access with strict boundaries between teams"* — supports group-based ownership model.
+- *"Governance rules to prevent pseudo-production environments"* — enforcement is via automation (the security job), not via DnA manually owning objects.
+
+**Status:** ✅ Answered — Transfer ownership to **(a) the team's Entra group**. Workshop consensus is team-level ownership with centralized enforcement. DnA controls the rules (via the security job), but teams own their objects. This aligns with the design in Section 2.5.
+
+---
+
 ### Q22 — Communication responsibility
 
 **Question:** Who is responsible for communicating changes to business teams?
@@ -235,17 +288,13 @@ Workshop notes also mention Retail Insights, Merchant, and Credit Risk as specif
 
 ## Questions Still Unanswered
 
-These need to be raised directly with Alinta — no information found in Allison's notes or the forwarded emails:
+These need to be raised directly with Alinta — no information found in Allison's notes, forwarded emails, or DnA Requirements attachments:
 
 | # | Question | Topic |
 |---|---|---|
-| 7 | Catalog for DnA internal work | Catalog Design |
-| 9 | Ownership transfer target (group vs SP vs DnA admin) | Security |
 | 15 | GitHub Secret Scanning status on ADH repos | Security |
 | 19 | Automation job hosting workspace | Operations |
 | 21 | Rollback plan / acceptable window | Operations |
-
-> **Note:** The DnA Requirements email (14 Aug 2025) has 3 unreviewed attachments: a PDF workshop board export, a User Requirement Summary (.docx), and DnA Workshop Notes (.docx). These may contain additional answers — particularly for Q7 (DnA catalog) and Q9 (ownership transfer).
 
 ---
 
