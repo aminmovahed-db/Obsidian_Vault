@@ -241,7 +241,7 @@ Workshop notes also mention Retail Insights, Merchant, and Credit Risk as specif
 
 ---
 
-### Q7 — Catalog for DnA internal work
+### Q7 — Catalog for DnA internal work ✅
 
 **Question:** Does the DnA team need their own pilot catalog for internal tooling, automation development, or testing? Or do they operate exclusively in Pipeline workspaces?
 
