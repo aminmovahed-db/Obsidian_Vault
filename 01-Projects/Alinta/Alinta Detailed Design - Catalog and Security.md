@@ -127,7 +127,41 @@ uat/
 
 **Proceed with Option A.** The explicit pilot_uat catalog provides a stronger governance boundary and a clearer lifecycle signal. The additional operational cost (one more catalog, explicit promotion step) is justified by the audit, cost attribution, and cleanup benefits.
 
-### 1.3 Naming Conventions
+### 1.3 Note: Potential Option D — Per-Domain UAT Catalogs
+
+> [!note] Placeholder — not an official option
+> This is an alternative worth revisiting if the shared `pilot_uat` catalog shows scaling issues or if teams grow significantly.
+
+**Idea:** Instead of a single shared `pilot_uat` catalog with per-team schemas, give each domain its own UAT catalog:
+
+```
+pilot_retail_finance/              ← team dev catalog
+pilot_uat_retail_finance/          ← team UAT catalog
+  ├── forecasting/                 ← schemas carried over from dev
+  └── billing_improvements/
+
+pilot_energy_supply_tech/
+pilot_uat_energy_supply_tech/
+  └── ...
+```
+
+**What this gains over Option A:**
+- Consistent isolation model — catalog-level boundaries in both dev and UAT (no mixed catalog/schema pattern)
+- Stronger inter-team isolation at UAT — one team's UAT work cannot interfere with another's
+- More granular UAT cost attribution per domain
+- Full team autonomy over their UAT catalog — no shared namespace coordination
+
+**What this trades away vs Option A:**
+- Catalog proliferation — doubles UAT catalogs (4-5 teams → 8-10 total catalogs), grows with each new team
+- DnA loses single-pane-of-glass visibility into all UAT activity (spread across multiple catalogs)
+- Cross-domain UAT harder — if a pilot spans two teams, need cross-catalog grants instead of cross-schema within `pilot_uat`
+- More Terraform plumbing — each new domain needs both dev and UAT catalog provisioned
+
+**Current assessment:** For Alinta's current scale (~4-5 teams) and short-lived UAT cycles, the shared `pilot_uat` (Option A) is simpler and gives DnA better oversight. But if UAT cycles become long-running or teams grow significantly, per-domain UAT catalogs become more compelling as a "phase 2" evolution.
+
+---
+
+### 1.4 Naming Conventions
 
 #### Catalogs
 
@@ -189,7 +223,7 @@ Rules:
 
 ---
 
-### 1.4 Migration Plan
+### 1.5 Migration Plan
 
 **From:** Single `pilot` catalog → **To:** Domain-based `pilot_<team>` catalogs
 
