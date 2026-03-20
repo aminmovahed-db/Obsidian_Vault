@@ -157,7 +157,46 @@ pilot_uat_energy_supply_tech/
 - Cross-domain UAT harder — if a pilot spans two teams, need cross-catalog grants instead of cross-schema within `pilot_uat`
 - More Terraform plumbing — each new domain needs both dev and UAT catalog provisioned
 
-**Current assessment:** For Alinta's current scale (~4-5 teams) and short-lived UAT cycles, the shared `pilot_uat` (Option A) is simpler and gives DnA better oversight. But if UAT cycles become long-running or teams grow significantly, per-domain UAT catalogs become more compelling as a "phase 2" evolution.
+#### Deeper Design Considerations
+
+**1. Permission model consistency.** The move to domain-based catalogs in dev (Option A) eliminates the need for schema-level grants — teams get catalog-level access via a single Terraform module. However, in `pilot_uat`, Option A reintroduces the same schema-level grant pattern: each team needs `USE SCHEMA`, `SELECT`, and `MODIFY` on `pilot_uat.<team>`, while being denied access to other teams' schemas within the same catalog. Option D avoids this inconsistency entirely — the same Terraform module and catalog-level grants used in dev apply identically in UAT. The permission model is uniform across all environments.
+
+**2. Multi-project schema segregation.** In Option A, when a team runs multiple projects through UAT simultaneously, all of them share a single schema (`pilot_uat.retail_finance`). This forces table-naming conventions to distinguish between projects (e.g., `forecasting_customer_segments` vs `billing_customer_segments`) — convention over enforcement. In Option D, the team gets a full UAT catalog with per-project schemas that mirror dev exactly:
+
+```
+Option A — shared pilot_uat (team with 2 active UAT projects):
+pilot_uat/
+  └── retail_finance/                    ← single schema for all projects
+        ├── forecasting_customer_segments    ← naming convention separates projects
+        ├── forecasting_model_output
+        ├── billing_invoice_summary
+        └── billing_anomaly_flags
+
+Option D — per-domain UAT catalog (same team, same projects):
+pilot_uat_retail_finance/
+  ├── forecasting/                       ← mirrors dev schema exactly
+  │     ├── customer_segments
+  │     └── model_output
+  └── billing_improvements/              ← mirrors dev schema exactly
+        ├── invoice_summary
+        └── anomaly_flags
+```
+
+Option D preserves the same schema structure in UAT as in dev, meaning promotion scripts and notebook references require no path rewriting beyond the catalog name.
+
+**3. Discoverability and information leakage.** In Option A, all teams require `USE CATALOG` on `pilot_uat` (see Section 2.3.1). This means any team member can discover other teams' schema names within `pilot_uat`, even without data access. While schema names alone are low-sensitivity, they reveal what projects other teams are working on — which may be undesirable for teams running sensitive or commercially confidential pilots. Option D provides complete catalog-level isolation: teams cannot see or discover other teams' UAT catalogs at all.
+
+**4. Access revocation lifecycle.** When a team completes UAT and their pilot is either promoted to production or decommissioned, the cleanup path differs:
+- **Option A:** Revoke schema-level grants (`USE SCHEMA`, `SELECT`, `MODIFY` on `pilot_uat.<team>`), drop the schema, but the team retains `USE CATALOG` on `pilot_uat` (since it's shared and other teams still use it). The team can still see remaining schemas in the catalog.
+- **Option D:** Revoke catalog-level access to `pilot_uat_<team>`, drop the catalog. Complete removal — no residual access, no stale visibility. Cleaner audit trail for access lifecycle.
+
+**Current assessment:** For Alinta's current scale (~4-5 teams) and short-lived UAT cycles, the shared `pilot_uat` (Option A) is simpler and gives DnA better oversight. However, Option D is a genuinely strong alternative — not just a "phase 2" thought — and becomes the preferred choice if any of the following prove true:
+
+- **Teams regularly run multiple projects through UAT concurrently**, making schema-level separation within `pilot_uat` awkward and convention-dependent
+- **The number of teams grows beyond ~5**, at which point the schema-level grant management in `pilot_uat` becomes operationally burdensome and the Terraform module divergence between dev (catalog grants) and UAT (schema grants) adds maintenance overhead
+- **Schema-level permission management in `pilot_uat` causes operational friction** — e.g., SNOW tickets for schema access, grant drift, or audit findings about teams seeing other teams' schema names
+
+The recommendation remains Option A for the initial rollout, but the design should be structured so that migrating a team from `pilot_uat.<team>` to `pilot_uat_<team>` is a low-effort operation if Option D becomes warranted.
 
 ---
 
