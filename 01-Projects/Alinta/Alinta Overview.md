@@ -179,3 +179,4 @@ Reference list of emails tagged "Alinta" for historical context:
 - 2026-03-17 — First meeting and follow-up
 - 2026-03-18 — Workshop planning, UC architecture discussion, Billy O'Connor context on DevOps/Terraform
 - 2026-03-19 — Scoping call with Chuong and Erik. Confirmed UC design scope (catalogs, schemas, volumes, permissions). DASDR not required. Jake/Link are technical contacts. Beyza to help with design. Erik away — Monday meeting to be moved to Wednesday. Key dates: UC implementation 13 April, Tagging 27 April. Allison shared historical docs and forwarded emails.
+- 2026-03-20 — Focused on catalog design section of [[Alinta Detailed Design - Catalog and Security]]. Expanded Option D (per-domain UAT catalogs) with deeper design considerations. Added ABAC for security as a consideration. Finished and sent capstone project to global team.
